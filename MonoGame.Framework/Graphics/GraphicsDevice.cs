@@ -1575,6 +1575,22 @@ namespace Microsoft.Xna.Framework.Graphics
                 renderTargetCount = renderTargets.Length;
                 if (renderTargetCount == 0)
                     renderTargets = null;
+/* DOM               
+                for (var i = 0; i < _currentRenderTargetBindings.Length; i++)
+                {
+                    
+                    var renderTarget = _currentRenderTargetBindings[i].RenderTarget as RenderTarget2D;
+                    if (renderTarget != null && renderTarget.DepthStencilFormat != DepthFormat.None)
+                    {
+                        // Delete the render buffers
+                        GL.DeleteRenderbuffers(1, ref renderTarget.glDepthBuffer);
+                        GraphicsExtensions.CheckGLError();
+                    }
+                }
+                
+                _currentRenderTargetBindings = null;
+                
+        */
             }
 
             // Try to early out if the current and new bindings are equal.
@@ -1681,9 +1697,9 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 if (renderTarget.DepthStencilFormat != DepthFormat.None)
                 {
-                    GL.FramebufferRenderbuffer(GLFramebuffer, GLDepthAttachment, GLRenderbuffer, renderTarget.glDepthStencilBuffer);
+                    GL.FramebufferRenderbuffer(GLFramebuffer, GLDepthAttachment, GLRenderbuffer, renderTarget.glDepthBuffer);
                     if (renderTarget.DepthStencilFormat == DepthFormat.Depth24Stencil8)
-                        GL.FramebufferRenderbuffer(GLFramebuffer, GLStencilAttachment, GLRenderbuffer, renderTarget.glDepthStencilBuffer);
+                        GL.FramebufferRenderbuffer(GLFramebuffer, GLStencilAttachment, GLRenderbuffer, renderTarget.glStencilBuffer);
                     else
                         GL.FramebufferRenderbuffer(GLFramebuffer, GLStencilAttachment, GLRenderbuffer, 0);
                 }
@@ -1692,6 +1708,8 @@ namespace Microsoft.Xna.Framework.Graphics
                     GL.FramebufferRenderbuffer(GLFramebuffer, GLDepthAttachment, GLRenderbuffer, 0);
                     GL.FramebufferRenderbuffer(GLFramebuffer, GLStencilAttachment, GLRenderbuffer, 0);
                 }
+//DOM				GL.FramebufferRenderbuffer(GLFramebuffer, GLDepthAttachment, GLRenderbuffer, renderTarget.glDepthBuffer);
+//DOM				GL.FramebufferRenderbuffer(GLFramebuffer, GLStencilAttachment, GLRenderbuffer, renderTarget.glStencilBuffer);
 
 #if !GLES
 				for (var i = 0; i < _currentRenderTargetCount; i++)
